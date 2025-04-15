@@ -1,0 +1,54 @@
+<Window x:Class="UiPathDiagnosticToolSimplified.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:UiPathDiagnosticToolSimplified.ViewModels"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="Orchestrator Diagnostic Tool"
+        Height="500" Width="800"
+        Background="White">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Window.Resources>
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <Border BorderBrush="SteelBlue" BorderThickness="3" CornerRadius="6" Margin="10" Padding="10">
+        <DockPanel LastChildFill="True">
+
+            <!-- Logo centered at the top -->
+            <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Center" Margin="0,0,0,20">
+                <Image Source="/Resources/uipath.png" Height="40" Width="120" Stretch="Uniform"/>
+            </StackPanel>
+
+            <StackPanel>
+                <TextBlock Text="Orchestrator Logs Collection:" FontWeight="Bold" Margin="0,0,0,10" FontSize="14"/>
+
+                <ListBox x:Name="CollectorsList"
+                         ItemsSource="{Binding Collectors}"
+                         DisplayMemberPath="Name"
+                         SelectionMode="Multiple"
+                         Height="200"
+                         SelectionChanged="CollectorsList_SelectionChanged"/>
+
+                <!-- IIS Logs Controls -->
+                <StackPanel Visibility="{Binding IsIISLogsSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <TextBlock Text="Number of Days of IIS Logs:" Margin="0,10,0,5"/>
+                    <xctk:IntegerUpDown Width="100"
+                                        Minimum="1"
+                                        Maximum="365"
+                                        Value="{Binding NumberOfDays, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <Button Content="Proceed"
+                        Height="30"
+                        Width="100"
+                        Margin="0,15,0,0"
+                        HorizontalAlignment="Left"
+                        Click="RunSelectedCollectors_Click"/>
+            </StackPanel>
+        </DockPanel>
+    </Border>
+</Window>
